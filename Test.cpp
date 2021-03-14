@@ -41,7 +41,7 @@ TEST_CASE("Bad snowman code") {
     CHECK_THROWS(snowman(-572));
     CHECK_THROWS(snowman(-16));
     // #<8 || #>8
-    CHECK_THROWS(snowman(14211123));
+    CHECK_THROWS(snowman(145555555));
     CHECK_THROWS(snowman(425125411));
     CHECK_THROWS(snowman(789511));
     CHECK_THROWS(snowman(572));

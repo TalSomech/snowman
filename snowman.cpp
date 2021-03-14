@@ -4,159 +4,176 @@
 #include <array>
 #include <iostream>
 #include <stdexcept>
-//using namespace std;
 
 namespace ariel {
-    std::string snowman(int key) {
-        std::array<int,8> inp = {};
-        std::string ans;
-        for (int i = 0; i < 8; i++) {
-            inp[i] = key % 10;
-            key = key / 10;
-        }
-        switch (inp[7]) {
-            case 1:
-                ans += " _===_\n";
-                break;
-            case 2:
-                ans += "  ___ \n"
-                       " .....\n";
-                break;
-            case 3:
-                ans += "   _  \n"
-                       "  /_\\ \n";
-                break;
-            case 4:
-                ans += "  ___ \n"
-                       " (_*_)\n";
-                break;
-        }
-        char body[8][2] = {};
-        body[7][0] = body[7][1] = '\n';
-        body[1][0] = body[1][1] = '(';
-        body[5][0] = body[5][1] = ')';
-        switch (inp[6]) {
-            case 1:
-                body[3][0] = ',';
-                break;
-            case 2:
-                body[3][0] = '.';
-                break;
-            case 3:
-                body[3][0] = '_';
-                break;
-            case 4:
-                body[3][0] = ' ';
-                break;
-        }//nose
-        switch (inp[5]) {
-            case 1:
-                body[2][0] = '.';
-                break;
-            case 2:
-                body[2][0] = 'o';
-                break;
-            case 3:
-                body[2][0] = '0';
-                break;
-            case 4:
-                body[2][0] = '-';
-                break;
-        }//left eye
-        switch (inp[4]) {
-            case 1:
-                body[4][0] = '.';
-                break;
+    const int min_input = 11111111, min_dig = 1, max_dig = 4, length = 8, hex_base = 10, up = 0, down = 1, left = 2, middle = 3, right = 4, body_lng = 2;
+    const int head = 7, nose = 6, left_eye = 5, right_eye = 4, left_arm = 3, right_arm = 2, vest = 1, feet = 0;
+    const int n = 7, lf = 1, rg = 5;
 
-            case 2:
-                body[4][0] = 'o';
-                break;
-
-            case 3:
-                body[4][0] = '0';
-                break;
-            case 4:
-                body[4][0] = '-';
-                break;
-
-        }// right eye
-        switch (inp[3]) {
-            case 1:
-                body[0][1] = '<';
-                body[0][0] = ' ';
-                break;
-            case 2:
-                body[0][0] = '\\';
-                body[0][1] = ' ';
-                break;
-            case 3:
-                body[0][1] = '/';
-                body[0][0] = ' ';
-                break;
-            case 4:
-                body[0][0] = ' ';
-                body[0][1] = ' ';
-                break;
+    std::array<int, length> Check(int key) {
+        std::array<int, length> inp = {};
+        if (key < min_dig) {
+            throw std::out_of_range{"Invalid code"};
         }
-        switch (inp[2]) {
-            case 1:
-                body[6][1] = '>';
-                body[6][0] = ' ';
-                break;
-            case 2:
-                body[6][0] = '/';
-                body[6][1] = ' ';
-                break;
-            case 3:
-                body[6][1] = '\\';
-                body[6][0] = ' ';
-                break;
-            case 4:
-                body[6][0] = ' ';
-                body[6][1] = ' ';
-                break;
+        for (int i = 0; i < length; i++) {
+            inp.at(i) = key % hex_base;
+            if (inp.at(i) > max_dig || inp.at(i) < min_dig) {
+                throw std::out_of_range{"Invalid code"};
+            }
+            key = key / hex_base;
         }
-        switch (inp[1]) {
-            case 1:
-                body[3][1] = ':';
-                body[2][1] = ' ';
-                body[4][1] = ' ';
-                break;
-            case 2:
-                body[3][1] = ' ';
-                body[2][1] = ']';
-                body[4][1] = '[';
-                break;
-            case 3:
-                body[3][1] = ' ';
-                body[2][1] = '>';
-                body[4][1] = '<';
-                break;
-            case 4:
-                body[3][1] = ' ';
-                body[2][1] = ' ';
-                body[4][1] = ' ';
-                break;
+        if (key != 0) {
+            throw std::out_of_range{"Invalid code"};
         }
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++)
-                ans += body[j][i];
-        }
-        switch (inp[0]) {
-            case 1:
-                ans += " ( : ) \n";
-                break;
-            case 2:
-                ans += " (\" \") \n";
-                break;
-            case 3:
-                ans += " (___) \n";
-                break;
-            case 4:
-                ans += " (   ) \n";
-                break;
-        }
-        return ans;
+        return inp;
     }
 
-};
+    std::string get_head(int inp) {
+        switch (inp) {
+            case 1:
+                return " _===_\n";
+            case 2:
+                return "  ___ \n"
+                       " .....\n";
+            case 3:
+                return "   _  \n"
+                       "  /_\\ \n";
+            case 4:
+                return "  ___ \n"
+                       " (_*_)\n";
+            default:
+                return " ";
+        }
+    }
+
+    char get_eye(int eye) {
+        switch (eye) {
+            case 1:
+                return '.';
+            case 2:
+                return 'o';
+            case 3:
+                return 'O';
+            case 4:
+                return '-';
+            default:
+                return ' ';
+        }
+    }
+
+    char get_nose(int key) {
+        switch (key) {
+            case 1:
+                return ',';
+            case 2:
+                return '.';
+            case 3:
+                return '_';
+            default:
+                return ' ';
+        }
+    }
+
+    void get_left_arm(std::array <std::array<char, body_lng>, length> &body, int key) {
+        const int left = 0;
+        switch (key) {
+            case 1:
+                body.at(left).at(down) = '<';
+                break;
+            case 2:
+                body.at(left).at(up) = '\\';
+                break;
+            case 3:
+                body.at(left).at(down) = '/';
+                break;
+            default:
+                break;
+        }
+    }
+
+    void get_right_arm(std::array <std::array<char, body_lng>, length> &body, int key) {
+        const int right = 6;
+        switch (key) {
+            case 1:
+                body.at(right).at(down) = '>';
+                break;
+            case 2:
+                body.at(right).at(up) = '/';
+                break;
+            case 3:
+                body.at(right).at(down) = '\\';
+                break;
+            case 4:
+                body.at(right).at(up) = ' ';
+                break;
+            default:
+                break;
+        }
+    }
+
+    void get_vest(std::array <std::array<char, body_lng>, length> &body, int key) {
+        switch (key) {
+            case 1:
+                body.at(middle).at(down) = ':';
+                break;
+            case 2:
+                body.at(left).at(down) = ']';
+                body.at(right).at(down) = '[';
+                break;
+            case 3:
+                body.at(left).at(down) = '>';
+                body.at(right).at(down) = '<';
+                break;
+            default:
+                break;
+        }
+    }
+
+    std::string get_feet(int key) {
+        switch (key) {
+            case 1:
+                return " ( : ) \n";
+            case 2:
+                return " (\" \") \n";
+            case 3:
+                return " (___) \n";
+            case 4:
+                return " (   ) \n";
+            default:
+                return " ";
+
+        }
+    }
+
+    void fill_space(std::array <std::array<char, body_lng>, length> &arr) {
+        for (int i = 0; i < body_lng; ++i) {
+            for (int j = 0; j < length; ++j) {
+                arr.at(j).at(i) = ' ';
+            }
+        }
+    }
+
+    std::string snowman(int key) {
+        std::array<int, length> inp = Check(key);
+        std::string ans;
+        ans += get_head(inp[head]);
+        std::array <std::array<char, body_lng>, length> body = {{}};
+        fill_space(body);
+        body.at(n).at(up) = body.at(n).at(down) = '\n';
+        body.at(lf).at(up) = body.at(lf).at(down) = '(';
+        body.at(rg).at(up) = body.at(rg).at(down) = ')';
+        body.at(middle).at(up) = get_nose(inp[nose]);
+        body.at(left).at(up) = get_eye(inp[left_eye]);
+        body.at(right).at(up) = get_eye(inp[right_eye]);
+        get_left_arm(body, inp[left_arm]);
+        get_right_arm(body, inp[right_arm]);
+        get_vest(body, inp[vest]);
+        for (int i = 0; i < body_lng; i++) {
+            for (int j = 0; j < length; j++) {
+                ans += body.at(j).at(i);
+            }
+        }
+        ans += get_feet(inp[feet]);
+        return ans;
+    }
+}
