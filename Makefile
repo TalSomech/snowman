@@ -11,7 +11,8 @@ run: test
 
 test: TestRunner.o StudentTest1.o StudentTest2.o StudentTest3.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o test
-
+main:main.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $^ -o main
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) --compile $< -o $@
 
@@ -28,5 +29,5 @@ tidy:
 	clang-tidy $(SOURCES) -checks=bugprone-*,clang-analyzer-*,cppcoreguidelines-*,performance-*,portability-*,readability-* --warnings-as-errors=* --
 
 clean:
-	rm -f *.o test
+	rm -f *.o test main
 	rm -f StudentTest*.cpp
